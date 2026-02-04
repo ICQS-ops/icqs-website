@@ -1,0 +1,980 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ICQS Limited - AI-Powered Anomaly Detection</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #1f2937;
+            overflow-x: hidden;
+        }
+        
+        /* Navigation Bar with Horizontal Tabs */
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: rgba(0, 0, 0, 0.95);
+            backdrop-filter: blur(10px);
+            z-index: 1000;
+            border-bottom: 2px solid rgba(16, 185, 129, 0.3);
+        }
+        
+        nav .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 75px;
+        }
+        
+        nav .logo {
+            font-size: 1.8em;
+            font-weight: 700;
+            background: linear-gradient(135deg, #10b981, #06b6d4);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            letter-spacing: 1px;
+        }
+        
+        nav .tabs {
+            display: flex;
+            gap: 5px;
+            list-style: none;
+            flex-wrap: nowrap;
+        }
+        
+        nav .tabs li {
+            position: relative;
+            white-space: nowrap;
+        }
+        
+        nav .tabs a {
+            display: block;
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 0.95em;
+            padding: 25px 20px;
+            transition: all 0.3s;
+            border-bottom: 3px solid transparent;
+        }
+        
+        nav .tabs a:hover {
+            color: #10b981;
+            background: rgba(16, 185, 129, 0.1);
+            border-bottom-color: #10b981;
+        }
+        
+        nav .tabs a.active {
+            color: #10b981;
+            border-bottom-color: #10b981;
+        }
+        
+        /* Mobile Menu Toggle */
+        .menu-toggle {
+            display: none;
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.8em;
+            cursor: pointer;
+        }
+        
+        /* Waveform Pattern */
+        .waveform-pattern {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            opacity: 0.5;
+            pointer-events: none;
+            overflow: hidden;
+            z-index: 1;
+        }
+        
+        .waveform-pattern svg {
+            width: 100%;
+            height: 100%;
+        }
+        
+        /* Hero Section */
+        .hero {
+            position: relative;
+            background: #000000;
+            color: white;
+            padding: 150px 20px 100px 20px;
+            text-align: center;
+            overflow: hidden;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .hero-content {
+            position: relative;
+            z-index: 10;
+        }
+        
+        .hero-logo {
+            width: 350px;
+            max-width: 90%;
+            margin-bottom: 50px;
+            animation: fadeInUp 1.2s ease-out;
+        }
+        
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .hero h1 {
+            font-size: 4em;
+            margin-bottom: 30px;
+            font-weight: 700;
+            animation: fadeInUp 1.4s ease-out;
+            background: linear-gradient(135deg, #10b981, #06b6d4, #8b5cf6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .hero p {
+            font-size: 1.5em;
+            opacity: 0.95;
+            animation: fadeInUp 1.6s ease-out;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        
+        /* Container */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        /* Section */
+        section {
+            padding: 100px 20px;
+            position: relative;
+            background: white;
+        }
+        
+        section h2 {
+            text-align: center;
+            font-size: 2.8em;
+            margin-bottom: 20px;
+            background: linear-gradient(135deg, #1e3a8a, #06b6d4);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            position: relative;
+        }
+        
+        section h2::after {
+            content: '';
+            position: absolute;
+            bottom: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 3px;
+            background: linear-gradient(90deg, #10b981, #06b6d4, #8b5cf6);
+        }
+        
+        section h3 {
+            font-size: 1.8em;
+            margin: 30px 0 15px 0;
+            color: #1e3a8a;
+        }
+        
+        .section-light { background: #ffffff; }
+        .section-dark { background: #f9fafb; }
+        
+        /* About/Story Section */
+        .about-content {
+            max-width: 1000px;
+            margin: 40px auto 0;
+        }
+        
+        .about-intro {
+            font-size: 1.3em;
+            line-height: 1.9;
+            color: #374151;
+            margin-bottom: 50px;
+            padding: 35px;
+            background: linear-gradient(145deg, #f9fafb, #ffffff);
+            border-left: 5px solid #10b981;
+            border-radius: 10px;
+        }
+        
+        .about-sections {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
+            gap: 40px;
+            margin-top: 50px;
+        }
+        
+        .about-box {
+            background: white;
+            padding: 40px;
+            border-radius: 15px;
+            border: 2px solid #e5e7eb;
+            transition: all 0.3s ease;
+        }
+        
+        .about-box:hover {
+            border-color: #10b981;
+            box-shadow: 0 8px 20px rgba(16, 185, 129, 0.15);
+            transform: translateY(-5px);
+        }
+        
+        .about-box h3 {
+            background: linear-gradient(135deg, #1e3a8a, #06b6d4);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 20px;
+        }
+        
+        .about-box p {
+            font-size: 1.1em;
+            line-height: 1.8;
+            color: #4b5563;
+        }
+        
+        /* Mission Section */
+        .mission-content {
+            max-width: 1000px;
+            margin: 40px auto 0;
+        }
+        
+        .mission-box {
+            background: linear-gradient(145deg, #f9fafb, #ffffff);
+            padding: 50px;
+            border-radius: 15px;
+            border: 2px solid #e5e7eb;
+            margin-bottom: 40px;
+        }
+        
+        .mission-box h3 {
+            text-align: center;
+            background: linear-gradient(135deg, #1e3a8a, #06b6d4);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 25px;
+            font-size: 2em;
+        }
+        
+        .mission-box p {
+            font-size: 1.3em;
+            line-height: 1.9;
+            color: #374151;
+            text-align: center;
+            font-style: italic;
+        }
+        
+        .vision-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 30px;
+            margin-top: 50px;
+        }
+        
+        .vision-item {
+            background: white;
+            padding: 35px;
+            border-radius: 12px;
+            border-left: 5px solid #10b981;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+        }
+        
+        .vision-item h4 {
+            color: #1e3a8a;
+            font-size: 1.3em;
+            margin-bottom: 15px;
+        }
+        
+        .vision-item p {
+            color: #4b5563;
+            font-size: 1.05em;
+            line-height: 1.7;
+        }
+        
+        /* Products Section */
+        .product-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
+            gap: 50px;
+            margin-top: 60px;
+        }
+        
+        .product-card {
+            background: linear-gradient(145deg, #ffffff, #f9fafb);
+            padding: 45px;
+            border-radius: 20px;
+            position: relative;
+            transition: all 0.4s ease;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            border: 2px solid transparent;
+        }
+        
+        .product-card::before {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            bottom: -2px;
+            background: linear-gradient(135deg, #10b981, #06b6d4, #8b5cf6);
+            border-radius: 20px;
+            z-index: 0;
+            opacity: 0;
+            transition: opacity 0.4s ease;
+        }
+        
+        .product-card > * {
+            position: relative;
+            z-index: 1;
+        }
+        
+        .product-card:hover::before { opacity: 1; }
+        .product-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 35px rgba(16, 185, 129, 0.25);
+        }
+        
+        .product-icon { font-size: 3.5em; margin-bottom: 25px; }
+        
+        .product-card h3 {
+            background: linear-gradient(135deg, #1e3a8a, #06b6d4);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin: 20px 0 10px 0;
+            font-size: 2em;
+        }
+        
+        .product-card h4 {
+            color: #6b7280;
+            font-weight: 400;
+            font-size: 1.2em;
+            margin-bottom: 25px;
+        }
+        
+        .product-card p {
+            margin-bottom: 20px;
+            line-height: 1.7;
+        }
+        
+        .product-card ul { list-style: none; margin: 25px 0; }
+        
+        .product-card li {
+            padding: 10px 0;
+            padding-left: 30px;
+            position: relative;
+            font-size: 1.05em;
+        }
+        
+        .product-card li:before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: #10b981;
+            font-weight: bold;
+            font-size: 1.2em;
+        }
+        
+        /* Technology Section */
+        .tech-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 35px;
+            margin-top: 60px;
+        }
+        
+        .tech-item {
+            background: white;
+            padding: 35px;
+            border-radius: 15px;
+            text-align: center;
+            border: 2px solid #e5e7eb;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .tech-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 3px;
+            background: linear-gradient(90deg, #10b981, #06b6d4, #8b5cf6);
+            transition: left 0.5s ease;
+        }
+        
+        .tech-item:hover::before { left: 0; }
+        .tech-item:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 10px 25px rgba(16, 185, 129, 0.2);
+            border-color: #10b981;
+        }
+        
+        .tech-item h4 {
+            color: #1e3a8a;
+            margin: 15px 0;
+            font-size: 1.3em;
+        }
+        
+        /* Services Section */
+        .services-intro {
+            max-width: 1000px;
+            margin: 40px auto;
+            font-size: 1.2em;
+            line-height: 1.9;
+            color: #374151;
+            text-align: center;
+        }
+        
+        .project-card {
+            max-width: 1000px;
+            margin: 50px auto;
+            background: linear-gradient(145deg, #ffffff, #f9fafb);
+            padding: 50px;
+            border-radius: 20px;
+            border: 2px solid #e5e7eb;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+        }
+        
+        .project-card h3 {
+            background: linear-gradient(135deg, #1e3a8a, #06b6d4);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-size: 2.2em;
+            margin-bottom: 25px;
+        }
+        
+        .project-meta {
+            display: flex;
+            gap: 30px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+        
+        .project-meta-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.1em;
+            color: #6b7280;
+        }
+        
+        .project-meta-item strong {
+            color: #1e3a8a;
+        }
+        
+        .project-description {
+            font-size: 1.15em;
+            line-height: 1.9;
+            color: #374151;
+            margin-top: 25px;
+        }
+        
+        .project-highlights {
+            margin-top: 35px;
+            padding: 30px;
+            background: white;
+            border-radius: 12px;
+            border-left: 5px solid #10b981;
+        }
+        
+        .project-highlights h4 {
+            color: #1e3a8a;
+            font-size: 1.4em;
+            margin-bottom: 20px;
+        }
+        
+        .project-highlights ul {
+            list-style: none;
+        }
+        
+        .project-highlights li {
+            padding: 12px 0;
+            padding-left: 30px;
+            position: relative;
+            font-size: 1.1em;
+            color: #4b5563;
+        }
+        
+        .project-highlights li:before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: #10b981;
+            font-weight: bold;
+            font-size: 1.3em;
+        }
+        
+        /* Contact Section */
+        .contact {
+            position: relative;
+            background: #000000;
+            color: white;
+            text-align: center;
+            overflow: hidden;
+        }
+        
+        .contact h2 {
+            color: white;
+            position: relative;
+            z-index: 10;
+        }
+        
+        .contact h2::after {
+            background: linear-gradient(90deg, #10b981, #06b6d4, #8b5cf6);
+        }
+        
+        .contact-info {
+            max-width: 700px;
+            margin: 60px auto 0;
+            font-size: 1.3em;
+            position: relative;
+            z-index: 10;
+        }
+        
+        .contact-info p { margin: 25px 0; }
+        
+        .contact-info a {
+            color: #10b981;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        
+        .contact-info a:hover { color: #06b6d4; }
+        
+        /* Footer */
+        footer {
+            background: #000000;
+            color: #9ca3af;
+            text-align: center;
+            padding: 35px 20px;
+            border-top: 1px solid #1f2937;
+        }
+        
+        /* Responsive */
+        @media (max-width: 900px) {
+            nav .tabs {
+                position: fixed;
+                top: 75px;
+                left: -100%;
+                width: 100%;
+                height: calc(100vh - 75px);
+                background: rgba(0, 0, 0, 0.98);
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                gap: 0;
+                transition: left 0.3s ease;
+            }
+            
+            nav .tabs.active {
+                left: 0;
+            }
+            
+            nav .tabs a {
+                width: 100%;
+                text-align: center;
+                padding: 20px;
+                border-bottom: 1px solid rgba(255,255,255,0.1);
+            }
+            
+            .menu-toggle {
+                display: block;
+            }
+            
+            .hero h1 { font-size: 2.5em; }
+            .hero p { font-size: 1.2em; }
+            .hero-logo { width: 250px; }
+            section h2 { font-size: 2.2em; }
+            .product-grid { grid-template-columns: 1fr; }
+            .about-sections { grid-template-columns: 1fr; }
+        }
+        
+        html {
+            scroll-behavior: smooth;
+        }
+        
+        section {
+            scroll-margin-top: 75px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation with Horizontal Tabs -->
+    <nav>
+        <div class="container">
+            <div class="logo">ICQS</div>
+            <button class="menu-toggle" onclick="toggleMenu()">☰</button>
+            <ul class="tabs" id="navTabs">
+                <li><a href="#story">Info</a></li>
+                <li><a href="#mission">Mission & Vision</a></li>
+                <li><a href="#solutions">AI-Powered Solutions</a></li>
+                <li><a href="#technology">Technology</a></li>
+                <li><a href="#services">Engineering Services</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero" id="home">
+        <div class="waveform-pattern">
+            <svg viewBox="0 0 1200 800" preserveAspectRatio="xMidYMid slice">
+                <path d="M0,400 Q150,80 300,400 Q450,720 600,400 Q750,80 900,400 Q1050,720 1200,400" 
+                      stroke="#10b981" stroke-width="5" fill="none" opacity="1"/>
+                <path d="M0,400 Q150,100 300,400 Q450,700 600,400 Q750,100 900,400 Q1050,700 1200,400" 
+                      stroke="#10b981" stroke-width="4" fill="none" opacity="0.8"/>
+                <path d="M0,400 Q150,120 300,400 Q450,680 600,400 Q750,120 900,400 Q1050,680 1200,400" 
+                      stroke="#10b981" stroke-width="3" fill="none" opacity="0.7"/>
+                <path d="M0,400 Q150,180 300,400 Q450,620 600,400 Q750,180 900,400 Q1050,620 1200,400" 
+                      stroke="#06b6d4" stroke-width="4" fill="none" opacity="0.9"/>
+                <path d="M0,400 Q150,200 300,400 Q450,600 600,400 Q750,200 900,400 Q1050,600 1200,400" 
+                      stroke="#06b6d4" stroke-width="3" fill="none" opacity="0.7"/>
+                <path d="M0,400 Q150,220 300,400 Q450,580 600,400 Q750,220 900,400 Q1050,580 1200,400" 
+                      stroke="#06b6d4" stroke-width="2.5" fill="none" opacity="0.6"/>
+                <path d="M0,400 Q150,280 300,400 Q450,520 600,400 Q750,280 900,400 Q1050,520 1200,400" 
+                      stroke="#8b5cf6" stroke-width="3" fill="none" opacity="0.8"/>
+                <path d="M0,400 Q150,300 300,400 Q450,500 600,400 Q750,300 900,400 Q1050,500 1200,400" 
+                      stroke="#8b5cf6" stroke-width="2.5" fill="none" opacity="0.7"/>
+                <path d="M0,400 Q200,120 400,400 Q600,680 800,400 Q1000,120 1200,400" 
+                      stroke="#10b981" stroke-width="3" fill="none" opacity="0.7"/>
+                <path d="M0,400 Q200,220 400,400 Q600,580 800,400 Q1000,220 1200,400" 
+                      stroke="#06b6d4" stroke-width="2.5" fill="none" opacity="0.6"/>
+            </svg>
+        </div>
+        
+        <div class="hero-content">
+            <img src="Original_Logo.png" alt="" class="hero-logo">
+            <h1>ICQS Limited</h1>
+            <p>AI-Powered Solutions for Satellites & Critical Infrastructure</p>
+        </div>
+    </section>
+
+    <!-- Story Section -->
+    <section class="section-light" id="story">
+        <div class="container">
+            <h2>Info</h2>
+            <div class="about-content">
+                <div class="about-intro">
+                    <p>ICQS Limited is a newborn enterprise established to develop commercially beneficial solutions using emerging technologies. Initial interest is focused on Machine Learning (ML) and Quantum Computing (QC). This product-based work is supplemented by providing system engineering, verification and validation expertise as support to businesses operating in the cybersecurity and Space ecosystems.</p>
+                </div>
+                
+                <div class="about-sections">
+                    <div class="about-box">
+                        <h3>Founded on Innovation</h3>
+                        <p>Established in April 2025, ICQS Limited was born from a vision to revolutionize anomaly detection in mission-critical systems. We recognized that satellite operators and critical infrastructure managers spend countless hours manually analyzing telemetry data, often missing subtle anomalies that could prevent catastrophic failures.</p>
+                    </div>
+                    
+                    <div class="about-box">
+                        <h3>Our Approach</h3>
+                        <p>Combining expertise in machine learning, aerospace engineering, and cybersecurity, we developed VIKI and AISAD - two groundbreaking platforms that autonomously detect anomalies with unprecedented accuracy. Our hybrid approach, merging advanced neural networks with proven statistical methods, delivers results that exceed traditional systems by 40%.</p>
+                    </div>
+                    
+                    <div class="about-box">
+                        <h3>Leadership</h3>
+                        <p>Founder Andrew Mortini's experience centers around emerging technologies (including ML) as well as design and system engineering and R&D in the satellite and 4G/5G industry. This deep industry knowledge combined with cutting-edge AI expertise drives ICQS's innovative solutions.</p>
+                    </div>
+                    
+                    <div class="about-box">
+                        <h3>Looking Forward</h3>
+                        <p>Today, we're advancing from prototype (TRL5) to production-ready systems (TRL7), building partnerships with leading aerospace organizations, and preparing for the next frontier: quantum-enhanced anomaly detection. At ICQS, we don't just detect anomalies - we protect what matters most.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Mission & Vision Section -->
+    <section class="section-dark" id="mission">
+        <div class="container">
+            <h2>Mission & Vision</h2>
+            <div class="mission-content">
+                <div class="mission-box">
+                    <h3>Our Mission</h3>
+                    <p>"To build and operate the most advanced anomaly detection platform globally, assuring improved security and safety to businesses, people and governments."</p>
+                </div>
+                
+                <div class="vision-list">
+                    <div class="vision-item">
+                        <h4>Innovation First</h4>
+                        <p>Pioneer next-generation intelligent monitoring systems combining AI and quantum computing for aerospace and cybersecurity applications.</p>
+                    </div>
+                    
+                    <div class="vision-item">
+                        <h4>Safety & Security</h4>
+                        <p>Make mission-critical operations safer, smarter, and more reliable through autonomous anomaly detection that never sleeps.</p>
+                    </div>
+                    
+                    <div class="vision-item">
+                        <h4>Dual Expertise</h4>
+                        <p>Deliver value through both innovative products (VIKI, AISAD) and expert engineering services in system design, verification, and validation.</p>
+                    </div>
+                    
+                    <div class="vision-item">
+                        <h4>Global Impact</h4>
+                        <p>Protect critical infrastructure worldwide - from satellites orbiting Earth to ground-based cyber-physical systems.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- AI-Powered Solutions Section -->
+    <section class="section-light" id="solutions">
+        <div class="container">
+            <h2>AI-Powered Solutions for Satellites & Critical Infrastructure</h2>
+            <div class="product-grid">
+                <div class="product-card">
+                    <h3>VIKI</h3>
+                    <h4>Variational Intelligence for Key Insights</h4>
+                    <p>Autonomous satellite telemetry anomaly detection achieving 88% accuracy. Our hybrid AI platform combines Variational Autoencoders, Transformers, and statistical methods to detect issues 40% faster than manual analysis.</p>
+                    <ul>
+                        <li>88.3% Detection Accuracy (AUC)</li>
+                        <li>80% Precision</li>
+                        <li>Real-time Processing</li>
+                        <li>Production-Ready Dashboard</li>
+                        <li>Data agnostic platform which can be used by the customer to train the models with minimal support</li>
+                    </ul>
+                    <p><strong>Applications:</strong> Satellite Operations, Ground Stations, Space Asset Protection</p>
+                    <p style="margin-top: 20px;"><strong>Status:</strong> TRL5 → advancing to TRL7</p>
+                </div>
+
+                <div class="product-card">
+                    <h3>AISAD</h3>
+                    <h4>Adaptive Intelligence for Security Anomaly Detection</h4>
+                    <p>Advanced cybersecurity platform for Cyber-Physical Systems achieving 97%+ F1 scores. Uses Reinforcement Learning for adaptive threshold adjustment that improves over time.</p>
+                    <ul>
+                        <li>97%+ F1 Score</li>
+                        <li>Adaptive Thresholds</li>
+                        <li>Real-time Monitoring</li>
+                        <li>Multi-dataset Validation</li>
+                        <li>RL-Based Optimization</li>
+                    </ul>
+                    <p><strong>Applications:</strong> Critical Infrastructure, Industrial Control Systems, Energy Sector</p>
+                    <p style="margin-top: 20px;"><strong>Status:</strong> TRL5 → advancing to TRL6</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Technology Section -->
+    <section class="section-dark" id="technology">
+        <div class="container">
+            <h2>Technology</h2>
+            <p style="text-align: center; max-width: 900px; margin: 30px auto; font-size: 1.2em; color: #374151;">
+                We combine cutting-edge Machine Learning with proven statistical methods to deliver reliable, production-ready anomaly detection.
+            </p>
+            <div class="tech-grid">
+                <div class="tech-item">
+                    <h4>🧠 Deep Learning</h4>
+                    <p>Variational Autoencoders, Transformers, LSTM Networks</p>
+                </div>
+                <div class="tech-item">
+                    <h4>📊 Statistical Methods</h4>
+                    <p>Peaks-Over-Threshold (POT), Extreme Value Theory</p>
+                </div>
+                <div class="tech-item">
+                    <h4>🎯 Attention Mechanisms</h4>
+                    <p>Time & Feature Attention for enhanced detection</p>
+                </div>
+                <div class="tech-item">
+                    <h4>🔄 Reinforcement Learning</h4>
+                    <p>Adaptive thresholds that improve over time</p>
+                </div>
+                <div class="tech-item">
+                    <h4>⚛️ Quantum-Ready</h4>
+                    <p>Architecture designed for quantum enhancement</p>
+                </div>
+                <div class="tech-item">
+                    <h4>☁️ Cloud & Edge</h4>
+                    <p>SaaS deployment + FPGA variants</p>
+                </div>
+            </div>
+            
+            <div style="text-align: center; margin-top: 60px; padding: 40px; background: white; border-radius: 15px; max-width: 900px; margin-left: auto; margin-right: auto;">
+                <h3 style="margin-bottom: 25px;">Roadmap</h3>
+                <div style="display: grid; gap: 20px; text-align: left;">
+                    <div style="padding: 20px; border-left: 5px solid #10b981; background: #f9fafb; border-radius: 8px;">
+                        <strong style="color: #1e3a8a; font-size: 1.1em;">Phase 1 (2025):</strong> Cloud SaaS Deployment
+                    </div>
+                    <div style="padding: 20px; border-left: 5px solid #06b6d4; background: #f9fafb; border-radius: 8px;">
+                        <strong style="color: #1e3a8a; font-size: 1.1em;">Phase 2 (2026):</strong> FPGA/Edge Computing Variants
+                    </div>
+                    <div style="padding: 20px; border-left: 5px solid #8b5cf6; background: #f9fafb; border-radius: 8px;">
+                        <strong style="color: #1e3a8a; font-size: 1.1em;">Phase 3 (2027):</strong> Quantum-Enhanced Algorithms
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Services Section -->
+    <section class="section-light" id="services">
+        <div class="container">
+            <h2>Engineering Services</h2>
+            <div class="services-intro">
+                <p>In addition to our AI-powered product solutions, ICQS Limited provides expert system engineering, verification and validation services to businesses in the cybersecurity and Space ecosystems.</p>
+            </div>
+            
+            <div class="project-card">
+                <h3>Cambridge Stratospheric Platform Limited (CST)</h3>
+                <div class="project-meta">
+                    <div class="project-meta-item">
+                        <strong>Type:</strong> Engineering Support
+                    </div>
+                    <div class="project-meta-item">
+                        <strong>Domain:</strong> 5G Wireless Communications
+                    </div>
+                    <div class="project-meta-item">
+                        <strong>Platform:</strong> Advanced UAV Systems
+                    </div>
+                </div>
+                
+                <div class="project-description">
+                    <p>Provided engineering support to Cambridge Stratospheric Platform Limited (CST) in the Design, Assembly, Integration and Test of a wireless communication system mounted into advanced UAVs to deploy 5G capabilities in areas where fixed 5G infrastructure fails to provide effective coverage and satellite solutions constitute an expensive alternative.</p>
+                </div>
+                
+                <div class="project-highlights">
+                    <h4>Impact & Innovation</h4>
+                    <ul>
+                        <li><strong>Cost Efficiency:</strong> Delivers 5G services at significantly lower costs than traditional satellite solutions</li>
+                        <li><strong>Coverage Extension:</strong> Provides connectivity in areas unreachable by fixed infrastructure</li>
+                        <li><strong>Business Model Innovation:</strong> Creates unparalleled benefits for end users through lower service fees</li>
+                        <li><strong>Future Applications:</strong> Opens new horizons for defense and other strategic markets</li>
+                        <li><strong>Ground-breaking Technology:</strong> Combines aerospace and telecommunications expertise in a novel deployment platform</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div style="text-align: center; margin-top: 60px; max-width: 800px; margin-left: auto; margin-right: auto;">
+                <p style="font-size: 1.2em; color: #374151; line-height: 1.8;">
+                    <strong>Our engineering services leverage deep expertise in:</strong><br>
+                    System Design • Verification & Validation • Integration & Testing • Satellite Systems • Wireless Communications • Cybersecurity • Quality Assurance
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section class="contact" id="contact">
+        <div class="waveform-pattern">
+            <svg viewBox="0 0 1200 800" preserveAspectRatio="xMidYMid slice">
+                <path d="M0,400 Q150,80 300,400 Q450,720 600,400 Q750,80 900,400 Q1050,720 1200,400" 
+                      stroke="#10b981" stroke-width="4" fill="none" opacity="0.8"/>
+                <path d="M0,400 Q150,120 300,400 Q450,680 600,400 Q750,120 900,400 Q1050,680 1200,400" 
+                      stroke="#06b6d4" stroke-width="3.5" fill="none" opacity="0.7"/>
+                <path d="M0,400 Q150,180 300,400 Q450,620 600,400 Q750,180 900,400 Q1050,620 1200,400" 
+                      stroke="#8b5cf6" stroke-width="3" fill="none" opacity="0.6"/>
+                <path d="M0,400 Q200,120 400,400 Q600,680 800,400 Q1000,120 1200,400" 
+                      stroke="#10b981" stroke-width="3" fill="none" opacity="0.6"/>
+            </svg>
+        </div>
+        
+        <div class="container">
+            <h2>Contact Us</h2>
+            <div class="contact-info">
+                <p><strong>ICQS Limited</strong></p>
+                <p>Incorporated: April 2025</p>
+                <p>Email: <a href="mailto:contact@icqs-technologies.com">contact@icqs-technologies.com</a></p>
+                <p>LinkedIn: <a href="https://linkedin.com/company/icqs-limited" target="_blank">Connect with us</a></p>
+                
+                <div style="margin-top: 60px;">
+                    <p><strong>We're open to:</strong></p>
+                    <p>Research Collaborations • Pilot Programs • Data Partnerships • ESA BIC Support • Engineering Consulting</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <p>&copy; 2025 ICQS Limited. All rights reserved.</p>
+        <p>Intelligent Anomaly Detection for Mission-Critical Systems</p>
+    </footer>
+
+    <!-- Mobile Menu Script -->
+    <script>
+        function toggleMenu() {
+            const menu = document.getElementById('navTabs');
+            menu.classList.toggle('active');
+        }
+        
+        // Smooth scroll to sections when clicking nav links
+        document.querySelectorAll('nav a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const targetId = this.getAttribute('href');
+                const targetSection = document.querySelector(targetId);
+                
+                if (targetSection) {
+                    // Close mobile menu if open
+                    const menu = document.getElementById('navTabs');
+                    menu.classList.remove('active');
+                    
+                    // Scroll to section with offset for fixed nav
+                    const navHeight = 75;
+                    const targetPosition = targetSection.offsetTop - navHeight;
+                    
+                    window.scrollTo({
+                        top: targetPosition,
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+        
+        // Active tab highlighting on scroll
+        window.addEventListener('scroll', () => {
+            const sections = document.querySelectorAll('section[id]');
+            const scrollY = window.pageYOffset;
+            
+            sections.forEach(section => {
+                const sectionHeight = section.offsetHeight;
+                const sectionTop = section.offsetTop - 100;
+                const sectionId = section.getAttribute('id');
+                
+                if (scrollY > sectionTop && scrollY <= sectionTop + sectionHeight) {
+                    document.querySelectorAll('nav a').forEach(link => {
+                        link.classList.remove('active');
+                    });
+                    const activeLink = document.querySelector(`nav a[href="#${sectionId}"]`);
+                    if (activeLink) {
+                        activeLink.classList.add('active');
+                    }
+                }
+            });
+        });
+    </script>
+</body>
+</html>
+                    
