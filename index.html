@@ -1,0 +1,712 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ICQS Limited - Intelligent Anomaly Detection</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #1f2937;
+            overflow-x: hidden;
+            background: #000000;
+        }
+        
+        /* Dramatic Waveform Pattern Background */
+        .waveform-pattern {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            opacity: 0.5;
+            pointer-events: none;
+            overflow: hidden;
+            z-index: 1;
+        }
+        
+        .waveform-pattern svg {
+            width: 100%;
+            height: 100%;
+        }
+        
+        /* Hero Section */
+        .hero {
+            position: relative;
+            background: #000000;
+            color: white;
+            padding: 80px 20px 120px 20px;
+            text-align: center;
+            overflow: hidden;
+        }
+        
+        .hero-content {
+            position: relative;
+            z-index: 10;
+        }
+        
+        .hero-logo {
+            width: 280px;
+            max-width: 90%;
+            margin-bottom: 40px;
+            animation: fadeInUp 1.2s ease-out;
+        }
+        
+        @keyframes fadeInUp {
+            from { 
+                opacity: 0; 
+                transform: translateY(30px);
+            }
+            to { 
+                opacity: 1; 
+                transform: translateY(0);
+            }
+        }
+        
+        .hero h1 {
+            font-size: 3em;
+            margin-bottom: 20px;
+            font-weight: 700;
+            animation: fadeInUp 1.4s ease-out;
+            background: linear-gradient(135deg, #10b981, #06b6d4, #8b5cf6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .hero h2 {
+            font-size: 1.8em;
+            margin-bottom: 15px;
+            font-weight: 300;
+            animation: fadeInUp 1.6s ease-out;
+        }
+        
+        .hero p {
+            font-size: 1.2em;
+            margin-bottom: 30px;
+            opacity: 0.9;
+            animation: fadeInUp 1.8s ease-out;
+        }
+        
+        .btn {
+            display: inline-block;
+            padding: 15px 40px;
+            background: linear-gradient(135deg, #10b981, #06b6d4);
+            color: white;
+            text-decoration: none;
+            border-radius: 50px;
+            font-size: 1.1em;
+            font-weight: 600;
+            transition: all 0.3s;
+            box-shadow: 0 4px 15px rgba(16, 185, 129, 0.4);
+            animation: fadeInUp 2s ease-out;
+            position: relative;
+            z-index: 10;
+        }
+        
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 25px rgba(16, 185, 129, 0.6);
+        }
+        
+        /* Dramatic Waveform Divider */
+        .waveform-divider {
+            position: relative;
+            width: 100%;
+            height: 150px;
+            background: linear-gradient(to bottom, #000000, #ffffff);
+            overflow: visible;
+        }
+        
+        .waveform-divider svg {
+            position: absolute;
+            top: 0;
+            width: 100%;
+            height: 150px;
+        }
+        
+        /* Container */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        /* Section */
+        section {
+            padding: 80px 20px;
+            position: relative;
+            background: white;
+        }
+        
+        section h2 {
+            text-align: center;
+            font-size: 2.5em;
+            margin-bottom: 20px;
+            background: linear-gradient(135deg, #1e3a8a, #06b6d4);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            position: relative;
+        }
+        
+        section h2::after {
+            content: '';
+            position: absolute;
+            bottom: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 3px;
+            background: linear-gradient(90deg, #10b981, #06b6d4, #8b5cf6);
+        }
+        
+        section h3 {
+            font-size: 1.8em;
+            margin: 30px 0 15px 0;
+            color: #1e3a8a;
+        }
+        
+        /* Mission Section */
+        .mission {
+            background: #f9fafb;
+            position: relative;
+        }
+        
+        .mission-text {
+            max-width: 800px;
+            margin: 0 auto;
+            text-align: center;
+            font-size: 1.2em;
+            font-style: italic;
+            color: #374151;
+            line-height: 1.8;
+        }
+        
+        .mission-subtitle {
+            margin-top: 30px;
+            font-size: 1.1em;
+            font-style: normal;
+        }
+        
+        /* Products Section */
+        .products {
+            background: white;
+            position: relative;
+        }
+        
+        .product-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 40px;
+            margin-top: 50px;
+        }
+        
+        .product-card {
+            background: linear-gradient(145deg, #ffffff, #f9fafb);
+            padding: 40px;
+            border-radius: 20px;
+            position: relative;
+            transition: all 0.4s ease;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            border: 2px solid transparent;
+            overflow: hidden;
+        }
+        
+        .product-card::before {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            bottom: -2px;
+            background: linear-gradient(135deg, #10b981, #06b6d4, #8b5cf6);
+            border-radius: 20px;
+            z-index: 0;
+            opacity: 0;
+            transition: opacity 0.4s ease;
+        }
+        
+        .product-card > * {
+            position: relative;
+            z-index: 1;
+        }
+        
+        .product-card:hover::before {
+            opacity: 1;
+        }
+        
+        .product-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 12px 30px rgba(16, 185, 129, 0.2);
+        }
+        
+        .product-icon {
+            font-size: 3em;
+            margin-bottom: 20px;
+        }
+        
+        .product-card h3 {
+            background: linear-gradient(135deg, #1e3a8a, #06b6d4);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin: 20px 0 10px 0;
+        }
+        
+        .product-card h4 {
+            color: #6b7280;
+            font-weight: 400;
+            font-size: 1.1em;
+            margin-bottom: 20px;
+        }
+        
+        .product-card ul {
+            list-style: none;
+            margin: 20px 0;
+        }
+        
+        .product-card li {
+            padding: 8px 0;
+            padding-left: 25px;
+            position: relative;
+        }
+        
+        .product-card li:before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: #10b981;
+            font-weight: bold;
+        }
+        
+        /* Technology Section */
+        .technology {
+            background: #f9fafb;
+            position: relative;
+        }
+        
+        .tech-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+            margin-top: 50px;
+        }
+        
+        .tech-item {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            text-align: center;
+            border: 2px solid #e5e7eb;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .tech-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 3px;
+            background: linear-gradient(90deg, #10b981, #06b6d4, #8b5cf6);
+            transition: left 0.5s ease;
+        }
+        
+        .tech-item:hover::before {
+            left: 0;
+        }
+        
+        .tech-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(16, 185, 129, 0.15);
+            border-color: #10b981;
+        }
+        
+        .tech-item h4 {
+            color: #1e3a8a;
+            margin: 15px 0;
+            font-size: 1.2em;
+        }
+        
+        /* Partnerships Section */
+        .partnerships {
+            background: white;
+            position: relative;
+        }
+        
+        .partnership-content {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .partnership-list {
+            background: linear-gradient(145deg, #f9fafb, #ffffff);
+            padding: 40px;
+            border-radius: 15px;
+            margin: 30px 0;
+            border: 2px solid #e5e7eb;
+        }
+        
+        .partnership-list ul {
+            list-style: none;
+        }
+        
+        .partnership-list li {
+            padding: 12px 0;
+            padding-left: 30px;
+            position: relative;
+            font-size: 1.1em;
+        }
+        
+        .partnership-list li:before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: #10b981;
+            font-weight: bold;
+            font-size: 1.3em;
+        }
+        
+        .roadmap {
+            margin-top: 40px;
+        }
+        
+        .roadmap-item {
+            padding: 20px;
+            margin: 15px 0;
+            background: white;
+            border-left: 4px solid #10b981;
+            border-radius: 5px;
+            transition: all 0.3s ease;
+        }
+        
+        .roadmap-item:hover {
+            border-left-width: 8px;
+            padding-left: 24px;
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.1);
+        }
+        
+        .roadmap-item strong {
+            background: linear-gradient(135deg, #1e3a8a, #06b6d4);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-size: 1.1em;
+        }
+        
+        /* Contact Section */
+        .contact {
+            position: relative;
+            background: #000000;
+            color: white;
+            text-align: center;
+            overflow: hidden;
+        }
+        
+        .contact h2 {
+            color: white;
+            position: relative;
+            z-index: 10;
+        }
+        
+        .contact h2::after {
+            background: linear-gradient(90deg, #10b981, #06b6d4, #8b5cf6);
+        }
+        
+        .contact-info {
+            max-width: 600px;
+            margin: 50px auto 0;
+            font-size: 1.2em;
+            position: relative;
+            z-index: 10;
+        }
+        
+        .contact-info p {
+            margin: 20px 0;
+        }
+        
+        .contact-info a {
+            color: #10b981;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        
+        .contact-info a:hover {
+            color: #06b6d4;
+        }
+        
+        /* Footer */
+        footer {
+            background: #000000;
+            color: #9ca3af;
+            text-align: center;
+            padding: 30px 20px;
+            border-top: 1px solid #1f2937;
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2em;
+            }
+            
+            .hero h2 {
+                font-size: 1.3em;
+            }
+            
+            .hero-logo {
+                width: 220px;
+            }
+            
+            section h2 {
+                font-size: 2em;
+            }
+            
+            .product-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Hero Section -->
+    <div class="hero">
+        <!-- Dramatic Waveform Pattern Background -->
+        <div class="waveform-pattern">
+            <svg viewBox="0 0 1200 800" preserveAspectRatio="xMidYMid slice">
+                <!-- High amplitude curved waveforms like in logo -->
+                <!-- Peak wave (green) -->
+                <path d="M0,400 Q150,80 300,400 Q450,720 600,400 Q750,80 900,400 Q1050,720 1200,400" 
+                      stroke="#10b981" stroke-width="5" fill="none" opacity="1"/>
+                <path d="M0,400 Q150,100 300,400 Q450,700 600,400 Q750,100 900,400 Q1050,700 1200,400" 
+                      stroke="#10b981" stroke-width="4" fill="none" opacity="0.8"/>
+                <path d="M0,400 Q150,120 300,400 Q450,680 600,400 Q750,120 900,400 Q1050,680 1200,400" 
+                      stroke="#10b981" stroke-width="3" fill="none" opacity="0.7"/>
+                
+                <!-- Medium wave (cyan) -->
+                <path d="M0,400 Q150,180 300,400 Q450,620 600,400 Q750,180 900,400 Q1050,620 1200,400" 
+                      stroke="#06b6d4" stroke-width="4" fill="none" opacity="0.9"/>
+                <path d="M0,400 Q150,200 300,400 Q450,600 600,400 Q750,200 900,400 Q1050,600 1200,400" 
+                      stroke="#06b6d4" stroke-width="3" fill="none" opacity="0.7"/>
+                <path d="M0,400 Q150,220 300,400 Q450,580 600,400 Q750,220 900,400 Q1050,580 1200,400" 
+                      stroke="#06b6d4" stroke-width="2.5" fill="none" opacity="0.6"/>
+                
+                <!-- Smaller wave (purple) -->
+                <path d="M0,400 Q150,280 300,400 Q450,520 600,400 Q750,280 900,400 Q1050,520 1200,400" 
+                      stroke="#8b5cf6" stroke-width="3" fill="none" opacity="0.8"/>
+                <path d="M0,400 Q150,300 300,400 Q450,500 600,400 Q750,300 900,400 Q1050,500 1200,400" 
+                      stroke="#8b5cf6" stroke-width="2.5" fill="none" opacity="0.7"/>
+                
+                <!-- Additional layered waves for depth -->
+                <path d="M0,400 Q200,120 400,400 Q600,680 800,400 Q1000,120 1200,400" 
+                      stroke="#10b981" stroke-width="3" fill="none" opacity="0.7"/>
+                <path d="M0,400 Q200,220 400,400 Q600,580 800,400 Q1000,220 1200,400" 
+                      stroke="#06b6d4" stroke-width="2.5" fill="none" opacity="0.6"/>
+            </svg>
+        </div>
+        
+        <div class="hero-content">
+            <img src="Original_Logo.png" alt="ICQS Logo" class="hero-logo">
+            <h1>ICQS Limited</h1>
+            <h2>Intelligent Anomaly Detection</h2>
+            <p>AI-Powered Solutions for Satellites & Critical Infrastructure</p>
+            <a href="#contact" class="btn">Contact Us</a>
+        </div>
+    </div>
+
+    <!-- Dramatic Waveform Divider -->
+    <div class="waveform-divider">
+        <svg viewBox="0 0 1200 150" preserveAspectRatio="none">
+            <!-- High amplitude transition waves -->
+            <path d="M0,75 Q200,15 400,75 Q600,135 800,75 Q1000,15 1200,75" 
+                  stroke="#10b981" stroke-width="5" fill="none" opacity="1"/>
+            <path d="M0,75 Q200,30 400,75 Q600,120 800,75 Q1000,30 1200,75" 
+                  stroke="#06b6d4" stroke-width="4" fill="none" opacity="0.9"/>
+            <path d="M0,75 Q200,45 400,75 Q600,105 800,75 Q1000,45 1200,75" 
+                  stroke="#8b5cf6" stroke-width="3" fill="none" opacity="0.8"/>
+        </svg>
+    </div>
+
+    <!-- Mission Section -->
+    <section class="mission">
+        <div class="container">
+            <h2>Our Mission</h2>
+            <div class="mission-text">
+                <p>"To build and operate the most advanced anomaly detection platform globally, assuring improved security and safety to businesses, people and governments."</p>
+                <p class="mission-subtitle">Founded in April 2025, ICQS Limited is pioneering the next generation of intelligent monitoring systems for aerospace and cybersecurity.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Products Section -->
+    <section class="products">
+        <div class="container">
+            <h2>Our Solutions</h2>
+            <div class="product-grid">
+                <!-- VIKI -->
+                <div class="product-card">
+                    <div class="product-icon">🛰️</div>
+                    <h3>VIKI</h3>
+                    <h4>Variational Intelligence for Key Insights</h4>
+                    <p>Autonomous satellite telemetry anomaly detection achieving 88% accuracy. Our hybrid AI platform combines Variational Autoencoders, Transformers, and statistical methods to detect issues 40% faster than manual analysis.</p>
+                    <ul>
+                        <li>88.3% Detection Accuracy</li>
+                        <li>80% Precision</li>
+                        <li>Real-time Processing</li>
+                        <li>Production-Ready Dashboard</li>
+                        <li>NASA/ESA Standard Methods (POT)</li>
+                    </ul>
+                    <p><strong>Applications:</strong> Satellite Operations, Ground Stations, Space Asset Protection</p>
+                </div>
+
+                <!-- AISAD -->
+                <div class="product-card">
+                    <div class="product-icon">🔒</div>
+                    <h3>AISAD</h3>
+                    <h4>Adaptive Intelligence for Security Anomaly Detection</h4>
+                    <p>Advanced cybersecurity platform for Cyber-Physical Systems achieving 97%+ F1 scores. Uses Reinforcement Learning for adaptive threshold adjustment.</p>
+                    <ul>
+                        <li>97%+ F1 Score</li>
+                        <li>Adaptive Thresholds</li>
+                        <li>Real-time Monitoring</li>
+                        <li>Multi-dataset Validation</li>
+                        <li>RL-Based Optimization</li>
+                    </ul>
+                    <p><strong>Applications:</strong> Critical Infrastructure, Industrial Control Systems, Energy Sector</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Technology Section -->
+    <section class="technology">
+        <div class="container">
+            <h2>Technology</h2>
+            <p style="text-align: center; max-width: 800px; margin: 20px auto; font-size: 1.1em;">
+                We combine cutting-edge Machine Learning with proven statistical methods to deliver reliable, production-ready anomaly detection.
+            </p>
+            <div class="tech-grid">
+                <div class="tech-item">
+                    <h4>🧠 Deep Learning</h4>
+                    <p>Variational Autoencoders, Transformers, LSTM Networks</p>
+                </div>
+                <div class="tech-item">
+                    <h4>📊 Statistical Methods</h4>
+                    <p>Peaks-Over-Threshold (POT), Extreme Value Theory</p>
+                </div>
+                <div class="tech-item">
+                    <h4>🎯 Attention Mechanisms</h4>
+                    <p>Time & Feature Attention for enhanced detection</p>
+                </div>
+                <div class="tech-item">
+                    <h4>🔄 Reinforcement Learning</h4>
+                    <p>Adaptive thresholds that improve over time</p>
+                </div>
+                <div class="tech-item">
+                    <h4>⚛️ Quantum-Ready</h4>
+                    <p>Architecture designed for quantum enhancement</p>
+                </div>
+                <div class="tech-item">
+                    <h4>☁️ Cloud & Edge</h4>
+                    <p>SaaS deployment + FPGA variants</p>
+                </div>
+            </div>
+            <div style="text-align: center; margin-top: 50px;">
+                <p><strong>Development Status:</strong></p>
+                <p>VIKI: TRL5 → advancing to TRL7</p>
+                <p>AISAD: TRL5 → advancing to TRL6</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Partnerships Section -->
+    <section class="partnerships">
+        <div class="container">
+            <h2>Partnerships & Collaboration</h2>
+            <div class="partnership-content">
+                <p style="text-align: center; font-size: 1.2em; margin: 30px 0;">
+                    We're actively seeking partners to advance our technology and expand market reach.
+                </p>
+                
+                <div class="partnership-list">
+                    <h3 style="text-align: center; margin-bottom: 30px;">Current Focus</h3>
+                    <ul>
+                        <li>ESA Business Incubation Centre Application</li>
+                        <li>Academic Research Partnerships</li>
+                        <li>Satellite Operator Pilot Programs</li>
+                        <li>Ground Station Collaborations</li>
+                    </ul>
+                </div>
+
+                <div class="roadmap">
+                    <h3 style="text-align: center; margin-bottom: 30px;">Roadmap</h3>
+                    <div class="roadmap-item">
+                        <strong>Phase 1 (2025):</strong> Cloud SaaS Deployment
+                    </div>
+                    <div class="roadmap-item">
+                        <strong>Phase 2 (2026):</strong> FPGA/Edge Computing Variants
+                    </div>
+                    <div class="roadmap-item">
+                        <strong>Phase 3 (2027):</strong> Quantum-Enhanced Algorithms
+                    </div>
+                </div>
+
+                <p style="text-align: center; font-size: 1.1em; margin: 50px 0 0 0;">
+                    <strong>Interested in collaborating?</strong><br>
+                    We offer free pilot programs for select partners in exchange for data validation and feedback.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section class="contact" id="contact">
+        <!-- Dramatic Waveform Pattern Background (stays in background, won't interfere with button) -->
+        <div class="waveform-pattern">
+            <svg viewBox="0 0 1200 800" preserveAspectRatio="xMidYMid slice">
+                <!-- High amplitude waveforms -->
+                <path d="M0,400 Q150,80 300,400 Q450,720 600,400 Q750,80 900,400 Q1050,720 1200,400" 
+                      stroke="#10b981" stroke-width="4" fill="none" opacity="0.8"/>
+                <path d="M0,400 Q150,120 300,400 Q450,680 600,400 Q750,120 900,400 Q1050,680 1200,400" 
+                      stroke="#06b6d4" stroke-width="3.5" fill="none" opacity="0.7"/>
+                <path d="M0,400 Q150,180 300,400 Q450,620 600,400 Q750,180 900,400 Q1050,620 1200,400" 
+                      stroke="#8b5cf6" stroke-width="3" fill="none" opacity="0.6"/>
+                <path d="M0,400 Q200,120 400,400 Q600,680 800,400 Q1000,120 1200,400" 
+                      stroke="#10b981" stroke-width="3" fill="none" opacity="0.6"/>
+            </svg>
+        </div>
+        
+        <div class="container">
+            <h2>Contact Us</h2>
+            <div class="contact-info">
+                <p><strong>ICQS Limited</strong></p>
+                <p>Incorporated: April 2025</p>
+                <p>Email: <a href="mailto:contact@icqs.com">contact@icqs.com</a></p>
+                <p>LinkedIn: <a href="https://linkedin.com/company/icqs-limited" target="_blank">Connect with us</a></p>
+                
+                <div style="margin-top: 50px;">
+                    <p><strong>We're open to:</strong></p>
+                    <p>Research Collaborations • Pilot Programs • Data Partnerships • ESA BIC Support</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <p>&copy; 2025 ICQS Limited. All rights reserved.</p>
+        <p>Intelligent Anomaly Detection for Mission-Critical Systems</p>
+    </footer>
+</body>
+</html>
