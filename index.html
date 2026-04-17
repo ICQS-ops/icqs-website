@@ -642,6 +642,7 @@
                 <li><a href="#solutions">AI-Powered Solutions</a></li>
                 <li><a href="#technology">Technology</a></li>
                 <li><a href="#services">Engineering Services</a></li>
+                <li><a href="#partnerships">Partnerships</a></li>
             </ul>
         </div>
     </nav>
@@ -757,26 +758,28 @@
                 <div class="product-card">
                     <h3>VIKI</h3>
                     <h4>Variational Intelligence for Key Insights</h4>
-                    <p>Advanced two-stage AI platform for autonomous satellite telemetry anomaly detection. Combining unsupervised deep learning with supervised refinement, VIKI achieves 96.8% detection accuracy with significantly reduced false alarm rates - making it production-ready for operational satellite monitoring.</p>
+                    <p>Advanced multi-stage AI platform for autonomous satellite telemetry anomaly detection that operates at two levels of intelligence. First, it answers <strong>is the satellite system in an anomalous state?</strong> — providing a system-level health alert with confidence probability. Second, if an anomaly is detected, it answers <strong>which specific channel or subsystem is responsible?</strong> — providing per-channel attribution that gives operators an immediate diagnostic starting point. VIKI does not replace operator judgement on the underlying physical cause, but it eliminates the manual effort of scanning dozens of channels to find where to look.</p>
                     
-                    <p style="margin-top: 20px;"><strong>Performance Metrics:</strong></p>
+                    <p style="margin-top: 20px;"><strong>Performance Metrics (independently validated):</strong></p>
                     <ul>
-                        <li>96.8% System AUC (Detection Accuracy)</li>
-                        <li>89% Precision (Low False Alarm Rate)</li>
-                        <li>87% F1-Score (Balanced Performance)</li>
-                        <li>73.6% Channel-Level F1-Adjusted</li>
+                        <li>99.70% System F1C — industry-standard composite metric (target &ge;88%)</li>
+                        <li>99.40% System Precision — point-level (target &ge;90%)</li>
+                        <li>100% System Recall — event-level detection (target &ge;85%)</li>
+                        <li>94.82% Mean Channel-Level F1C across 22 active channels</li>
+                        <li>99.75% F1C on 3-month clustered anomaly dataset</li>
                     </ul>
                     
                     <p style="margin-top: 20px;"><strong>Key Capabilities:</strong></p>
                     <ul>
                         <li>System Health Monitoring with Real-Time Dashboards</li>
-                        <li>Critical Root Cause Analysis via Individual Channel Anomaly Detection (Multivariate)</li>
+                        <li>Two-Level Intelligence: system-level health alert plus per-channel attribution identifying which subsystem is anomalous</li>
+                        <li>Diagnostic Starting Point: operators receive both the alert and the specific channel responsible — eliminating manual scan of all telemetry</li>
                         <li>Multi-Database and Multi-Cloud Connectivity</li>
                         <li>Multi-Satellite / Multi-Constellation Support</li>
                         <li>Data-Agnostic Platform with Minimal Customer Support Required</li>
                     </ul>
                     
-                    <p style="margin-top: 20px;"><strong>Architecture:</strong> Two-Stage POT-VAE + XGBoost with Attention Mechanisms</p>
+                    <p style="margin-top: 20px;"><strong>Architecture:</strong> &beta;-VAE (TimeAttention + BiLSTM + Transformer + FeatureAttention) + Auto-calibrated POT Thresholds + System XGBoost + Per-Channel XGBoost</p>
                     <p><strong>Applications:</strong> Satellite Operations, Ground Stations, Multi-Constellation Fleet Management</p>
                     <p style="margin-top: 20px;"><strong>Status:</strong> TRL5 → advancing to TRL7</p>
                 </div>
@@ -897,6 +900,49 @@
         </div>
     </section>
 
+    <!-- Partnerships & Collaboration Section -->
+    <section class="section-dark" id="partnerships">
+        <div class="container">
+            <h2>Partnerships &amp; Collaboration</h2>
+            <div class="services-intro">
+                <p>ICQS Limited actively seeks partnerships and collaborative ventures with organisations that share our commitment to innovation in AI, aerospace, and critical infrastructure. We believe the most transformative solutions emerge from combining complementary expertise.</p>
+            </div>
+
+            <div class="project-card">
+                <h3>Craft Prospects</h3>
+                <div class="project-meta">
+                    <div class="project-meta-item">
+                        <strong>Type:</strong>&nbsp;Collaboration Venture
+                    </div>
+                    <div class="project-meta-item">
+                        <strong>Domain:</strong>&nbsp;Space Technology &amp; Innovation
+                    </div>
+                </div>
+
+                <div class="project-description">
+                    <p>ICQS Limited is collaborating with Craft Prospects to explore the convergence of advanced AI-driven anomaly detection with next-generation space systems. This partnership combines Craft Prospects&#39; expertise in space mission concepts and hardware innovation with ICQS&#39;s AI and machine learning capabilities, targeting opportunities in on-board autonomy, in-orbit servicing, and intelligent satellite operations.</p>
+                </div>
+
+                <div class="project-highlights">
+                    <h4>Areas of Joint Interest</h4>
+                    <ul>
+                        <li><strong>On-Board Autonomy:</strong> Deploying VIKI on embedded processors and FPGA platforms for real-time on-board anomaly detection and FDIR</li>
+                        <li><strong>AI for Space:</strong> Developing lightweight, radiation-tolerant AI inference pipelines for spacecraft computers including AMD Versal AI Engine targets</li>
+                        <li><strong>Mission Intelligence:</strong> Combining mission design expertise with autonomous health monitoring for next-generation satellite platforms</li>
+                        <li><strong>Joint Bidding:</strong> Pursuing UK Space Agency, government, and commercial opportunities that benefit from combined AI and spacecraft engineering expertise</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div style="text-align: center; margin-top: 60px; max-width: 800px; margin-left: auto; margin-right: auto;">
+                <p style="font-size: 1.2em; color: #374151; line-height: 1.8;">
+                    <strong>Open to collaboration in:</strong><br>
+                    On-Board AI &amp; FDIR &bull; Government &amp; Commercial Joint Bids &bull; Research Partnerships &bull; Pilot Programmes &bull; Data Sharing Agreements &bull; Technology Licensing
+                </p>
+            </div>
+        </div>
+    </section>
+
     <!-- Contact Section -->
     <section class="contact" id="contact">
         <div class="waveform-pattern">
@@ -922,7 +968,7 @@
                 
                 <div style="margin-top: 60px;">
                     <p><strong>We're open to:</strong></p>
-                    <p>Research Collaborations • Pilot Programs • Data Partnerships • ESA BIC Support • Engineering Consulting</p>
+                    <p>Research Collaborations • Pilot Programs • Data Partnerships • Incubator Support • Engineering Consulting</p>
                 </div>
             </div>
         </div>
